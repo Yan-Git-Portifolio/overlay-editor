@@ -2,6 +2,7 @@ from tkinter import Tk, Text, Menu, messagebox
 from tkinter.filedialog import asksaveasfilename, askopenfilename
 import subprocess
 
+
 WIDTH = 700
 HEIGHT = 550
 
@@ -13,7 +14,6 @@ class Main:
         self.screen_configurator()
         self.text_configurator()
         self.menu_configurator()
-        self.code_output_configurator()
         self.screen.mainloop()
 
     def screen_configurator(self):
@@ -50,11 +50,8 @@ class Main:
             messagebox.showerror("Erro", "Você precisa salvar o arquivo primeiro!")
             return
         command = f'python {self.file_path}'
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        output, error = process.communicate()
-        self.code_output.delete('1.0', 'end')
-        self.code_output.insert('1.0', output)
-        self.code_output.insert('1.0', error)
+        process = subprocess.Popen(["start", "cmd", "/k", f"{command}"], shell=True)
+        process.wait()
 
     def menu_configurator(self):
         self.main_menu = Menu(self.screen)
@@ -63,7 +60,7 @@ class Main:
         self.file_menu_bar.add_command(label="Abrir", command=self.open_file)
         self.file_menu_bar.add_command(label="Salvar como", command=self.save_as)
         self.file_menu_bar.add_command(label="Salvar", command=self.save_as)
-        self.file_menu_bar.add_command(label="Sair", command=exit)
+        self.file_menu_bar.add_command(label="Sair", command=self.screen.quit)
         self.main_menu.add_cascade(label="Opções", menu=self.file_menu_bar)
 
         self.run_menu_bar = Menu(self.main_menu, tearoff=0)
@@ -71,10 +68,6 @@ class Main:
         self.main_menu.add_cascade(label="Execução", menu=self.run_menu_bar)
 
         self.screen.config(menu=self.main_menu)
-
-    def code_output_configurator(self):
-        self.code_output = Text(self.screen, bg="black", fg="green", height=10)
-        self.code_output.pack(fill="x")
 
 if __name__ == "__main__":
     Main()
