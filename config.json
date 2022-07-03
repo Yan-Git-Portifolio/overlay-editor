@@ -1,0 +1,24 @@
+{
+  "themes": {
+    "light": {
+        "name": "light",
+        "background": "white",
+        "color": "black"
+    },
+    "prompt": {
+        "name": "prompt",
+        "background": "black",
+        "color": "green"
+    },
+    "dracula": {
+        "name": "dracula",
+        "background": "purple",
+        "color": "yellow"
+    }
+  },
+  "fonts": {
+    "Times": "Times",
+    "Consolas": "Consolas",
+    "Arial": "Arial"
+  }
+}

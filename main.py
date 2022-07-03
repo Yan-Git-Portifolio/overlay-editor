@@ -1,13 +1,30 @@
-from tkinter import Tk, Text, Menu, messagebox
-from tkinter.filedialog import asksaveasfilename, askopenfilename
-import subprocess
+from tkinter import Tk, Text, Menu, Toplevel, LabelFrame, Label, Button
+from tkinter import ttk
+import json
+from funcs import Funcs
 
 
 WIDTH = 700
 HEIGHT = 550
+with open("config.json", "r") as config:
+    configuracoes = json.load(config)
+    themes = configuracoes["themes"]
+    fonts = configuracoes["fonts"]
+    temas_disponiveis = []
+    fontes_disponiveis = []
+    for tema in themes:
+        temas_disponiveis.append(tema)
+    for fonte in fonts:
+        fontes_disponiveis.append(fonte)
+
+with open("atual.json", "r") as config_atual:
+    atual = json.load(config_atual)
+
+tema_atual = themes[atual["theme_name"]]
+tamanhos_disponiveis = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
 
 
-class Main:
+class Main(Funcs):
     def __init__(self):
         self.file_path = ''
         self.screen = Tk()
@@ -22,37 +39,11 @@ class Main:
         self.screen.iconbitmap("icone.ico")
 
     def text_configurator(self):
-        self.code_text = Text(self.screen)
+        self.code_text = Text(self.screen, background=tema_atual["background"], fg=tema_atual["color"],
+                              font=f"{atual['font_family']} {atual['font_size']}")
         self.code_text.pack(fill="both", expand=True)
 
-    def set_file_path(self, path):
-        self.file_path = path
 
-    def open_file(self):
-        path = askopenfilename(filetypes=[('Python Files', '*.py')])
-        with open(path, 'r') as file:
-            code = file.read()
-            self.code_text.delete('1.0', 'end')
-            self.code_text.insert('1.0', code)
-            self.file_path = path
-
-    def save_as(self):
-        if self.file_path == '':
-            path = asksaveasfilename(filetypes=[('Python Files', '*.py')])
-        else:
-            path = self.file_path
-        with open(path, 'w') as file:
-            code = self.code_text.get('1.0', 'end')
-            file.write(code)
-            self.set_file_path(path)
-
-    def run(self):
-        if self.file_path == '':
-            messagebox.showerror("Erro", "Você precisa salvar o arquivo primeiro!")
-            return
-        command = f'python {self.file_path}'
-        process = subprocess.Popen(["start", "cmd", "/k", f"{command}"], shell=True)
-        process.wait()
 
     def menu_configurator(self):
         self.main_menu = Menu(self.screen)
@@ -68,8 +59,38 @@ class Main:
         self.run_menu_bar.add_command(label="Executar", command=self.run)
         self.main_menu.add_cascade(label="Execução", menu=self.run_menu_bar)
 
+        self.configs_menu_bar = Menu(self.main_menu, tearoff=0)
+        self.configs_menu_bar.add_command(label="Temas", command=self.preferences_configurator)
+        self.main_menu.add_cascade(label="Configurações", menu=self.configs_menu_bar)
+
         self.screen.config(menu=self.main_menu)
+
+    def preferences_configurator(self):
+        preferences_screen = Toplevel(self.screen)
+        # Configurações da tela #
+        preferences_screen.title("Preferencias")
+        preferences_screen.geometry("200x220")
+        preferences_screen.resizable(False, False)
+        # Label Frame #
+        temas_e_fonte = LabelFrame(preferences_screen, text="Tema e fonte")
+        temas_e_fonte.pack(fill="both", padx=10)
+        # Combobox #
+        Label(temas_e_fonte, text="Tema").pack()
+        temas = ttk.Combobox(temas_e_fonte, values=temas_disponiveis)
+        temas.set(tema_atual["name"])
+        temas.pack(pady=5)
+        Label(temas_e_fonte, text="Tamanho").pack()
+        tamanho = ttk.Combobox(temas_e_fonte, values=tamanhos_disponiveis)
+        tamanho.set(atual["font_size"])
+        tamanho.pack(pady=5)
+        Label(temas_e_fonte, text="Fontes").pack()
+        fontes = ttk.Combobox(temas_e_fonte, values=fontes_disponiveis)
+        fontes.set(atual["font_family"])
+        fontes.pack(pady=5)
+        aplicar = Button(preferences_screen, text="Aplicar", bg="#ddd",
+                         command=lambda : self.aplicar_preferencias(tema=temas.get(), tamanho=int(tamanho.get()), familia=fontes.get()))
+        aplicar.pack(pady=7)
+
 
 if __name__ == "__main__":
     Main()
-
