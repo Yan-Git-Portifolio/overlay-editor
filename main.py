@@ -19,6 +19,7 @@ class Main:
     def screen_configurator(self):
         self.screen.title("Overlay Editor")
         self.screen.geometry(f"{WIDTH}x{HEIGHT}")
+        self.screen.iconbitmap("icone.ico")
 
     def text_configurator(self):
         self.code_text = Text(self.screen)
