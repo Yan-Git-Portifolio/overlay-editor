@@ -27,6 +27,7 @@ tamanhos_disponiveis = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
 class Main(Funcs):
     def __init__(self):
         self.file_path = ''
+        self.interpretador = ''
         self.screen = Tk()
         self.screen_configurator()
         self.text_configurator()
@@ -40,10 +41,8 @@ class Main(Funcs):
 
     def text_configurator(self):
         self.code_text = Text(self.screen, background=tema_atual["background"], fg=tema_atual["color"],
-                              font=f"{atual['font_family']} {atual['font_size']}")
+                              font=f"{atual['font_family']} {atual['font_size']}", insertbackground=tema_atual["insert"])
         self.code_text.pack(fill="both", expand=True)
-
-
 
     def menu_configurator(self):
         self.main_menu = Menu(self.screen)

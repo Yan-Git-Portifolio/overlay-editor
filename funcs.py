@@ -1,14 +1,14 @@
 from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename, askopenfilename
 import subprocess
-import json
-
+import os
 
 class Funcs:
     def set_file_path(self, path):
         self.file_path = path
 
     def open_file(self):
+        global path
         path = askopenfilename(filetypes=[('Python Files', '*.py')])
         with open(path, 'r') as file:
             code = file.read()
@@ -30,14 +30,17 @@ class Funcs:
         if self.file_path == '':
             messagebox.showerror("Erro", "Você precisa salvar o arquivo primeiro!")
             return
-        command = f'python {self.file_path}'
-        process = subprocess.Popen(["start", "cmd", "/k", f"{command}"], shell=True)
-        process.wait()
+        if self.interpretador == '':
+            messagebox.showinfo("Interpretador", "Selecione o interpretador python")
+            interpretador = askopenfilename()
+            command = f'{interpretador} {self.file_path}'
+            process = subprocess.Popen(["start", "cmd", "/k", f"{command}"], shell=True)
+            process.wait()
+            return
 
     def aplicar_preferencias(self, tema, tamanho, familia):
         atual = f'"theme_name": "{tema}","font_size": {tamanho},"font_family": "{familia}"'
         atual = "{"+atual+"}"
-        print(atual)
         # atual = json.dumps(atual, indent=4)
         with open('atual.json', 'w') as arquivo:
              arquivo.write(atual)

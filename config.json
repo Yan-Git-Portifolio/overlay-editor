@@ -3,17 +3,20 @@
     "light": {
         "name": "light",
         "background": "white",
-        "color": "black"
+        "color": "black",
+        "insert": "black"
     },
     "prompt": {
         "name": "prompt",
         "background": "black",
-        "color": "green"
+        "color": "green",
+        "insert": "green"
     },
     "dracula": {
         "name": "dracula",
         "background": "purple",
-        "color": "yellow"
+        "color": "yellow",
+        "insert": "yellow"
     }
   },
   "fonts": {
