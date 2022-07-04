@@ -1,4 +1,5 @@
 from tkinter import Tk, Text, Menu, Toplevel, LabelFrame, Label, Button
+import tkinter.font as tkfont
 from tkinter import ttk
 import json
 from funcs import Funcs
@@ -42,15 +43,17 @@ class Main(Funcs):
     def text_configurator(self):
         self.code_text = Text(self.screen, background=tema_atual["background"], fg=tema_atual["color"],
                               font=f"{atual['font_family']} {atual['font_size']}", insertbackground=tema_atual["insert"])
+        font = tkfont.Font(font=self.code_text['font'])
+        tab_size = font.measure('    ')
+        self.code_text.config(tabs=tab_size)
         self.code_text.pack(fill="both", expand=True)
-
     def menu_configurator(self):
         self.main_menu = Menu(self.screen)
 
         self.file_menu_bar = Menu(self.main_menu, tearoff=0)
         self.file_menu_bar.add_command(label="Abrir", command=self.open_file)
         self.file_menu_bar.add_command(label="Salvar como", command=self.save_as)
-        self.file_menu_bar.add_command(label="Salvar", command=self.save_as)
+        self.file_menu_bar.add_command(label="Salvar", command=self.save)
         self.file_menu_bar.add_command(label="Sair", command=self.screen.quit)
         self.main_menu.add_cascade(label="Opções", menu=self.file_menu_bar)
 
