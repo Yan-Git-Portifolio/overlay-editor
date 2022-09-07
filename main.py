@@ -4,7 +4,6 @@ from tkinter import ttk
 import json
 from funcs import Funcs
 
-
 WIDTH = 700
 HEIGHT = 550
 with open("config.json", "r") as config:
@@ -34,6 +33,8 @@ class Main(Funcs):
         self.text_configurator()
         self.menu_configurator()
         self.screen.bind("<Key>", lambda event: self.update())
+        self.screen.bind("<Control_L><s>", lambda event: self.save())
+        self.screen.bind("<Control_L><z>", lambda event: self.code_text.edit_undo())
         self.screen.mainloop()
         
     def screen_configurator(self):
@@ -43,7 +44,8 @@ class Main(Funcs):
 
     def text_configurator(self):
         self.code_text = Text(self.screen, background=tema_atual["background"], fg=tema_atual["color"],
-                              font=f"{atual['font_family']} {atual['font_size']}", insertbackground=tema_atual["insert"])
+                              font=f"{atual['font_family']} {atual['font_size']}", insertbackground=tema_atual["insert"],
+                              undo=True)
         font = tkfont.Font(font=self.code_text['font'])
         tab_size = font.measure('    ')
         self.code_text.config(tabs=tab_size)
@@ -153,3 +155,4 @@ class Main(Funcs):
 
 if __name__ == "__main__":
     Main()
+
